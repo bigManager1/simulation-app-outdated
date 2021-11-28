@@ -3,7 +3,7 @@ import './App.css';
 import {useEffect, useState } from "react";
 import axios from 'axios';
 import Component from './Component';
-import { Router, Route } from 'react-router-dom';
+import {Router, Route } from 'react-router-dom';
 
 function App() {
 
@@ -13,6 +13,8 @@ function App() {
       <Component/>
     </div>
   );
+
+
 }
 
 export default App;
