@@ -105,7 +105,7 @@ function Component() {
             y coordinate of the mouse at a specified field (below). Clicking the button will trigger 
             a panel to open up - every second the y coordinate of the cursor with regards to the panel
             is collected and the sensor value is changed in the API (via a PATCH call).
-            The process will last for 10 seconds. A CSV file containing the values can then be downloaded.
+            The process will last from clicking 'start' to clicking 'stop'. A CSV file containing the values can then be downloaded.
         </p>
         
 
@@ -114,7 +114,7 @@ function Component() {
         <CSVLink data={sensorsData.toString()}>Download the changes</CSVLink>
         <p>Current sensor value: {Ycoord}</p>
         <p>Current collected information {sensorsData.toString()}</p>
-        
+
         {panelSetup.map(panel => 
             <div style={{backgroundColor: "rgba(200, 0, 0," + (parseFloat((panel/100).toFixed(2))).toString()+")" , height: "2px"}} class="strip" onMouseOver = {() => pushValue(parseFloat((panel/100).toFixed(2)))}>
                 {panel%10==0 ?
