@@ -114,6 +114,7 @@ function Component() {
         <CSVLink data={sensorsData.toString()}>Download the changes</CSVLink>
         <p>Current sensor value: {Ycoord}</p>
         <p>Current collected information {sensorsData.toString()}</p>
+        
         {panelSetup.map(panel => 
             <div style={{backgroundColor: "rgba(200, 0, 0," + (parseFloat((panel/100).toFixed(2))).toString()+")" , height: "2px"}} class="strip" onMouseOver = {() => pushValue(parseFloat((panel/100).toFixed(2)))}>
                 {panel%10==0 ?
