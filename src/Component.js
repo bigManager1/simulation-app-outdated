@@ -1,28 +1,29 @@
 import {useEffect, useState } from "react";
 import axios from 'axios';
 import "./App.css";
-import { CSVLink, CSVDownload } from "react-csv";
+import { CSVLink} from "react-csv";
 function Component() {
-
+    // the url shows the user where the api is deployed - data is accessable from there
     const url = "https://shrouded-hamlet-51189.herokuapp.com";
+
+    // a panel is setup to be mapped to div elements with different values
     const panelSetup  = Array.from(Array(100).keys());
+
+    // the hooks represent states under which the functions will operate, or the panels will be
+    // mapped from the api resource
     const [ongoing, setOngoing] = useState(false);
     const [sensorsData, setSensorsData] = useState([]);
-  
     const [pins,setPins] = useState([]);
-    const [sensors,setSensors] = useState([]);
+    // an initial value of 0.0 is initialized for the cursor
     const [Ycoord, setYcoord] = useState("0.0");
     
+    // the function fetches all the Pin resource representations from the api
     async function fetchPins(){// get call to map buttons
       await axios.get(url+'/pins')
       .then(result => setPins(result.data));
     }
-
-    async function fetchSensors(){// get call to map buttons
-        await axios.get(url+'/sensors')
-        .then(result => setSensors(result.data));
-      }
   
+    // the function turns the pin value to 'On' by using a patch call and changing the value of the pin
     function pinOn(name){ // patch to put another pin in
       axios.patch(url+'/pins/' +name ,{
         pinValue: true, // setting pin value to 1, to signify that the pin is active
@@ -30,6 +31,7 @@ function Component() {
       fetchPins();
     }
   
+    // alternatively, the value can be set to false in an effort to turn the pin off
     function pinOff(name){ // patch to put pin off
       axios.patch(url+'/pins/' +name ,{
         pinValue: false,
@@ -37,27 +39,38 @@ function Component() {
       fetchPins();
     }
 
+    // for the coordinate tracking sensor simulation, this function sets the value of the cursor
+    // to be patched into the sensor api.
     function register(coord){
         axios.patch(url+'/sensors/heightSensor',{
             sensorValue: coord,
         }).catch((error) => console.log('Error: ', error))
         sensorsData.push(coord);
-        fetchSensors();
     }
 
+    // the pin value is changed
     function pushValue(coord){
         setYcoord(coord);
     }
 
+    // this function sets the 'Ongoing' hook to true
     function start(){
         setOngoing(true);
     }
 
+    // this function cleans the array where the sensor values are collected and turns off the 
+    // 'Ongoing' hook by setting it to false
     function stop(){
         setSensorsData([]);
         setOngoing(false);
     }
 
+    // useEffect is a hook that is executing it's contents repeatedly.
+    // first, we make sure we are shown the freshest api value representation by fetching the pins,
+    // for the pin simulation
+    // for the sensor simulation, we initialize a timing variable and set it to null in the begining.
+    // when the ongoing hook is activated, we fire off the 'register' function every 1000 ms (1s)
+    // when the ongoing hook is deactivated, timing is cleared.
     useEffect(() => {
         fetchPins();
         let timing = null;
